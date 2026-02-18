@@ -1,22 +1,379 @@
-/* Simple styles for Contact Manager */
+/* Birthday Gift Website Styles */
+
+:root {
+  --primary: #ff1493;
+  --secondary: #ff69b4;
+  --accent: #ffd700;
+  --dark: #1a1a2e;
+  --light: #fff;
+  --text: #333;
+  --success: #50c878;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background: #f4f6f9;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-.card {
-  box-shadow: 0 6px 20px rgba(2,6,23,0.08);
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-#contactsTbody .empty-row {
+/* Header */
+.header {
+  background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+  color: white;
   text-align: center;
-  color: #6c757d;
+  padding: 60px 20px;
+  box-shadow: 0 8px 32px rgba(255, 20, 147, 0.3);
 }
 
-.action-btns button {
-  margin-left: 6px;
+.header-content h1.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  animation: bounce 0.6s ease-in-out;
 }
 
-@media (max-width: 576px) {
-  .action-btns button { margin-left: 4px; padding: 6px 8px; }
+.header-content .subtitle {
+  font-size: 1.3rem;
+  opacity: 0.95;
+}
+
+/* Main Content */
+.main {
+  padding: 60px 0;
+}
+
+section {
+  margin-bottom: 80px;
+}
+
+section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  color: var(--light);
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Gift Section */
+.gift-section {
+  text-align: center;
+}
+
+.gift-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Gift Box Animation */
+.gift-box {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  animation: rotate 4s linear infinite;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gift-box:hover {
+  transform: scale(1.05);
+}
+
+.gift-top {
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(135deg, #ff1493, #ff69b4);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 -5px 15px rgba(255, 20, 147, 0.4);
+}
+
+.gift-body {
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  font-size: 80px;
+}
+
+.gift-center {
+  text-align: center;
+}
+
+.gift-side {
+  width: 30px;
+  height: 160px;
+  background: linear-gradient(90deg, #ff1493, #ff69b4);
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(255, 20, 147, 0.6);
+  background: #ff0090;
+}
+
+.btn-secondary {
+  background: var(--accent);
+  color: var(--dark);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6);
+  background: #ffe700;
+}
+
+/* Gift Content */
+.gift-content {
+  margin-top: 40px;
+  animation: slideUp 0.5s ease-out;
+}
+
+.gift-content.hidden {
+  display: none;
+}
+
+.message-card {
+  background: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.message-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 15px;
+}
+
+.message-card p {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 25px;
+  line-height: 1.8;
+}
+
+.birthday-wishes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.wish {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Gallery Section */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.gallery-item {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.gallery-item:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+/* Wishes Section */
+.wishes-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.wish-form {
+  max-width: 600px;
+  margin: 0 auto 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+textarea {
+  padding: 15px;
+  border: 2px solid var(--light);
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.95);
+  min-height: 100px;
+}
+
+.wishes-list {
+  max-width: 600px;
+  margin: 0 auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.wish-item {
+  background: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--primary);
+  animation: slideIn 0.3s ease-out;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.empty-message {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+/* Footer */
+.footer {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+  padding: 30px;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
+
+.small-text {
+  font-size: 0.9rem !important;
+  opacity: 0.9;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes rotate {
+  0% { transform: rotateX(0) rotateY(0); }
+  100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content h1.title {
+    font-size: 2.5rem;
+  }
+
+  section h2 {
+    font-size: 2rem;
+  }
+
+  .gift-box {
+    width: 150px;
+    height: 150px;
+  }
+
+  .gift-body {
+    font-size: 60px;
+  }
+
+  .message-card {
+    padding: 25px;
+  }
+
+  .birthday-wishes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .btn {
+    padding: 10px 25px;
+    font-size: 0.95rem;
+  }
 }

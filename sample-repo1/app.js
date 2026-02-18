@@ -1,122 +1,176 @@
-(function(){
-  const LS_KEY = 'contacts_v1';
-  let contacts = [];
-  let bsModal;
+// Birthday Gift Website JavaScript
 
-  function qs(id){ return document.getElementById(id); }
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  loadWishes();
+  setupEventListeners();
+});
 
-  function loadContacts(){
-    try{
-      contacts = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
-    }catch(e){ contacts = []; }
-  }
+// Setup Event Listeners
+function setupEventListeners() {
+  const openBtn = document.getElementById('openBtn');
+  const submitWishBtn = document.getElementById('submitWish');
+  const giftBox = document.getElementById('giftBox');
 
-  function saveContacts(){
-    localStorage.setItem(LS_KEY, JSON.stringify(contacts));
-  }
-
-  function render(){
-    const tbody = qs('contactsTbody');
-    tbody.innerHTML = '';
-    if(!contacts || contacts.length === 0){
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td class="empty-row" colspan="5">No contacts yet — click "Add Contact" to create one.</td>`;
-      tbody.appendChild(tr);
-      return;
+  openBtn.addEventListener('click', openGift);
+  giftBox.addEventListener('click', openGift);
+  submitWishBtn.addEventListener('click', addWish);
+  
+  // Allow Enter key to submit wish
+  document.getElementById('wishInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && e.ctrlKey) {
+      addWish();
     }
-
-    contacts.forEach(c => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${escapeHtml(c.name)}</td>
-        <td>${escapeHtml(c.email || '')}</td>
-        <td>${escapeHtml(c.phone || '')}</td>
-        <td>${escapeHtml(c.company || '')}</td>
-        <td class="text-end action-btns">
-          <button class="btn btn-sm btn-outline-secondary" data-action="edit" data-id="${c.id}">Edit</button>
-          <button class="btn btn-sm btn-outline-danger" data-action="delete" data-id="${c.id}">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  function escapeHtml(str){
-    return String(str || '').replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]; });
-  }
-
-  function openAdd(){
-    qs('modalTitle').textContent = 'Add Contact';
-    qs('contactId').value = '';
-    qs('name').value = '';
-    qs('email').value = '';
-    qs('phone').value = '';
-    qs('company').value = '';
-    bsModal.show();
-  }
-
-  function openEdit(id){
-    const c = contacts.find(x=>x.id === id);
-    if(!c) return;
-    qs('modalTitle').textContent = 'Edit Contact';
-    qs('contactId').value = c.id;
-    qs('name').value = c.name;
-    qs('email').value = c.email || '';
-    qs('phone').value = c.phone || '';
-    qs('company').value = c.company || '';
-    bsModal.show();
-  }
-
-  function deleteContact(id){
-    if(!confirm('Delete this contact?')) return;
-    contacts = contacts.filter(c=>c.id !== id);
-    saveContacts();
-    render();
-  }
-
-  function onFormSubmit(e){
-    e.preventDefault();
-    const id = qs('contactId').value;
-    const name = qs('name').value.trim();
-    if(!name){ qs('name').focus(); return; }
-    const email = qs('email').value.trim();
-    const phone = qs('phone').value.trim();
-    const company = qs('company').value.trim();
-
-    if(id){
-      const idx = contacts.findIndex(c=>c.id === id);
-      if(idx !== -1){
-        contacts[idx].name = name;
-        contacts[idx].email = email;
-        contacts[idx].phone = phone;
-        contacts[idx].company = company;
-      }
-    } else {
-      const newContact = { id: String(Date.now()), name, email, phone, company };
-      contacts.push(newContact);
-    }
-
-    saveContacts();
-    render();
-    bsModal.hide();
-  }
-
-  document.addEventListener('DOMContentLoaded', ()=>{
-    loadContacts();
-    render();
-
-    bsModal = new bootstrap.Modal(document.getElementById('contactModal'));
-
-    qs('addContactBtn').addEventListener('click', openAdd);
-    qs('contactForm').addEventListener('submit', onFormSubmit);
-
-    qs('contactsTbody').addEventListener('click', function(e){
-      const btn = e.target.closest('button');
-      if(!btn) return;
-      const action = btn.getAttribute('data-action');
-      const id = btn.getAttribute('data-id');
-      if(action === 'edit') openEdit(id);
-      if(action === 'delete') deleteContact(id);
-    });
   });
-})();
+}
+
+// Open Gift Function
+function openGift() {
+  const giftContent = document.getElementById('giftContent');
+  const openBtn = document.getElementById('openBtn');
+  const giftBox = document.getElementById('giftBox');
+
+  if (giftContent.classList.contains('hidden')) {
+    giftContent.classList.remove('hidden');
+    openBtn.textContent = 'Gift Opened! 🎉';
+    openBtn.disabled = true;
+    giftBox.style.animation = 'none';
+    
+    // Trigger confetti
+    triggerConfetti();
+  }
+}
+
+// Add Wish Function
+function addWish() {
+  const wishInput = document.getElementById('wishInput');
+  const wishText = wishInput.value.trim();
+
+  if (wishText === '') {
+    alert('Please write a wish!');
+    return;
+  }
+
+  // Get existing wishes
+  let wishes = getWishes();
+
+  // Create new wish object
+  const wish = {
+    id: Date.now(),
+    text: wishText,
+    timestamp: new Date().toLocaleString()
+  };
+
+  // Add to array
+  wishes.unshift(wish);
+
+  // Save to localStorage
+  localStorage.setItem('birthday_wishes', JSON.stringify(wishes));
+
+  // Clear input
+  wishInput.value = '';
+
+  // Re-render wishes
+  renderWishes();
+}
+
+// Get Wishes from LocalStorage
+function getWishes() {
+  try {
+    return JSON.parse(localStorage.getItem('birthday_wishes')) || [];
+  } catch (e) {
+    return [];
+  }
+}
+
+// Load and Render Wishes
+function loadWishes() {
+  renderWishes();
+}
+
+function renderWishes() {
+  const wishesList = document.getElementById('wishesList');
+  const wishes = getWishes();
+
+  if (wishes.length === 0) {
+    wishesList.innerHTML = '<p class="empty-message">No wishes yet. Be the first to share!</p>';
+    return;
+  }
+
+  wishesList.innerHTML = wishes.map(wish => `
+    <div class="wish-item">
+      <p style="margin: 0 0 5px 0;">${escapeHtml(wish.text)}</p>
+      <small style="opacity: 0.7;">${wish.timestamp}</small>
+      <button onclick="deleteWish(${wish.id})" style="float: right; background: none; border: none; color: #ff1493; cursor: pointer; font-size: 0.9rem;">Delete</button>
+    </div>
+  `).join('');
+}
+
+// Delete Wish
+function deleteWish(id) {
+  let wishes = getWishes();
+  wishes = wishes.filter(w => w.id !== id);
+  localStorage.setItem('birthday_wishes', JSON.stringify(wishes));
+  renderWishes();
+}
+
+// Escape HTML
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Confetti Effect
+function createConfetti() {
+  const container = document.getElementById('confetti-container');
+  
+  for (let i = 0; i < 50; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.position = 'fixed';
+    confetti.style.width = Math.random() * 10 + 5 + 'px';
+    confetti.style.height = confetti.style.width;
+    confetti.style.backgroundColor = ['#ff1493', '#ff69b4', '#ffd700', '#667eea', '#764ba2'][Math.floor(Math.random() * 5)];
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.top = '-10px';
+    confetti.style.opacity = '0.7';
+    confetti.style.pointerEvents = 'none';
+    confetti.style.borderRadius = '50%';
+    
+    container.appendChild(confetti);
+    
+    animateConfetti(confetti);
+  }
+}
+
+function animateConfetti(element) {
+  let top = -10;
+  let left = parseFloat(element.style.left);
+  let velocity = Math.random() * 5 + 2;
+  let drift = (Math.random() - 0.5) * 2;
+
+  const animate = () => {
+    top += velocity;
+    left += drift;
+    element.style.top = top + 'px';
+    element.style.left = left + 'px';
+    element.style.opacity = 1 - (top / window.innerHeight);
+
+    if (top < window.innerHeight) {
+      requestAnimationFrame(animate);
+    } else {
+      element.remove();
+    }
+  };
+
+  animate();
+}
+
+function triggerConfetti() {
+  createConfetti();
+}
